@@ -167,8 +167,16 @@ def evaluate():
         "details": details,
         "parsed_measurements_cm": parsed
     })
+@app.route("/routes", methods=["GET"])
+def routes():
+    from flask import jsonify
+    rule_map = []
+    for r in app.url_map.iter_rules():
+        rule_map.append({"endpoint": r.endpoint, "rule": str(r), "methods": sorted(list(r.methods))})
+    return jsonify(rule_map)
 
 if __name__ == "__main__":
     # On Render/Railway, they set PORT for you
     port = int(os.environ.get("PORT", "8000"))
     app.run(host="0.0.0.0", port=port)
+
